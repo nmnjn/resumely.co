@@ -64,9 +64,15 @@ export async function SubmitForm(prevState: any, formData: FormData) {
       };
     }
 
-    console.log(file);
+    if (file.type != "application/pdf") {
+      throw Error(
+        "Uploaded file is not a valid PDF. Please upload a PDF file only."
+      );
+    }
 
-    const supabase = createClient();
+    if (file.size > 500000) {
+      throw Error("Uploaded file is larger than supported tokens");
+    }
 
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
@@ -75,14 +81,13 @@ export async function SubmitForm(prevState: any, formData: FormData) {
     const rawResponse = await generateQuestions(data.text);
     const parsedResponse = parseResponse(rawResponse);
 
+    const supabase = createClient();
     const { error } = await supabase.from("generations").insert({
       email: user.email,
       file_name: file.name,
       response: parsedResponse,
       action: "GENQV1",
     });
-
-    console.log(error);
 
     return {
       message: "",
