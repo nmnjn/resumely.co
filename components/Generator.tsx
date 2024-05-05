@@ -84,12 +84,16 @@ export default function Generator({
           onDrop={(e) => {
             e.preventDefault();
             setFileEnter(false);
-            console.log(e.dataTransfer.items);
             if (e.dataTransfer.items.length == 1) {
               const file = e.dataTransfer.items[0].getAsFile() as File;
-              console.log(file);
               setFile(file);
               formState.message = "";
+              let fileInput = document.querySelector(
+                ".resume-picker"
+              ) as HTMLInputElement;
+              if (fileInput) {
+                fileInput.files = e.dataTransfer.files;
+              }
             }
             checkAuth();
           }}
@@ -116,7 +120,7 @@ export default function Generator({
                     accept="application/pdf"
                     id="resume"
                     name="resume"
-                    className="sr-only"
+                    className="resume-picker sr-only"
                     onChange={handleFileChange}
                   />
                 </label>
