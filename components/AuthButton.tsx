@@ -1,5 +1,5 @@
 import { signOut } from "@/app/login/actions";
-import { getUser } from "@/app/protected/actions";
+import { getUser } from "@/app/actions";
 import Link from "next/link";
 
 export default async function AuthButton() {
