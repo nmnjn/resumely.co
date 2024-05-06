@@ -26,7 +26,7 @@ export async function signUp(formData: FormData) {
   const password = formData.get("password") as string;
   const supabase = createClient();
 
-  const { error } = await supabase.auth.signUp({
+  const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
@@ -34,11 +34,27 @@ export async function signUp(formData: FormData) {
     },
   });
 
+  if (data.user && data.user.identities && data.user.identities.length === 0) {
+    // user email aready exists, log the user
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      return redirect(`/login?message=${error.message}`);
+    }
+
+    return redirect("/");
+  }
+
   if (error) {
     return redirect(`/login?message=${error.message}`);
   }
 
-  return redirect("/login?message=Check email to continue sign in process");
+  return redirect(
+    "/login?message=Check your email to continue the sign in process!"
+  );
 }
 
 export async function signInWithGoogle(formData: FormData) {
