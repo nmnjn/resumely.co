@@ -6,7 +6,6 @@ const defaultUrl = process.env.VERCEL_URL
   : "http://localhost:3000";
 
 export const metadata = {
-  metadataBase: new URL(defaultUrl),
   title: "Resumely",
   description: "Generate interview ready questions from your resume.",
 };
