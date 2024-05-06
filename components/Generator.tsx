@@ -134,14 +134,16 @@ export default function Generator({
           </div>
         </div>
         {file?.name ? (
-          <SubmitButton
-            type="submit"
-            className="animate-in bg-green-700 rounded-md px-4 py-2 text-foreground mb-2 w-full shadow-md shadow-green-600/25 hover:bg-green-600 hover:shadow-lg hover:shadow-green-600/25 col-span-full"
-            pendingText="Generating Questions"
-            formAction={submitFormAction}
-          >
-            Submit
-          </SubmitButton>
+          <div className="col-span-full grid place-items-center">
+            <SubmitButton
+              type="submit"
+              className="animate-in text-white bg-green-600 rounded-md px-4 py-2 w-9/12 md:w-6/12 shadow-md shadow-green-600/25 hover:bg-green-500 hover:shadow-lg hover:shadow-green-500/25"
+              pendingText="Generating Questions..."
+              formAction={submitFormAction}
+            >
+              Submit
+            </SubmitButton>
+          </div>
         ) : (
           <></>
         )}
