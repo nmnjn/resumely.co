@@ -79,7 +79,7 @@ export async function SubmitForm(prevState: any, formData: FormData) {
     const buffer = Buffer.from(arrayBuffer);
     const data = await pdfParse(buffer);
 
-    const rawResponse = await generateQuestionsGPT(data.text);
+    const rawResponse = await generateQuestions(data.text);
     const parsedResponse = parseResponse(rawResponse);
 
     const supabase = createClient();
