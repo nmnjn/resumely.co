@@ -102,10 +102,10 @@ export default function Generator({
           <div
             className={`${
               fileEnter
-                ? "border-2 border-green-700"
+                ? "border-2 border-green-500"
                 : file
-                ? "border-2 border-green-700"
-                : "border border-dashed border-white/25"
+                ? "border-2 border-green-500"
+                : "border border-dashed border-foreground/25"
             } flex justify-center rounded-lg px-6 py-10`}
           >
             <div className="text-center">
