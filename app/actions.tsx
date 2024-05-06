@@ -8,6 +8,30 @@ import { GeneratorResponse } from "@/utils/interface";
 
 import generateQuestions from "@/utils/groq/client";
 import generateQuestionsGPT from "@/utils/gpt/client";
+import { GPT_MODELS, GROQ_MODELS } from "@/utils/configs";
+import { Database } from "@/types/supabase";
+
+export async function getModels() {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("models")
+    .select("model")
+    .is("enabled", true);
+
+  if (error) {
+    return ["llama3-8b-8192"];
+  }
+
+  var models = [] as string[];
+
+  data?.forEach((element) => {
+    if (element.model) {
+      models.push(element.model);
+    }
+  });
+
+  return models;
+}
 
 export async function getUser(redirectToLogin: boolean) {
   const supabase = createClient();
@@ -65,6 +89,8 @@ export async function SubmitForm(prevState: any, formData: FormData) {
       };
     }
 
+    const model = (formData.get("model") as string) || "llama3-8b-8192";
+
     if (file.type != "application/pdf") {
       throw Error(
         "Uploaded file is not a valid PDF. Please upload a PDF file only."
@@ -79,17 +105,29 @@ export async function SubmitForm(prevState: any, formData: FormData) {
     const buffer = Buffer.from(arrayBuffer);
     const data = await pdfParse(buffer);
 
-    const rawResponse = await generateQuestions(data.text);
+    var rawResponse = "";
+
+    if (GROQ_MODELS.includes(model)) {
+      rawResponse = await generateQuestions(model, data.text);
+    } else if (GPT_MODELS.includes(model)) {
+      rawResponse = await generateQuestionsGPT(model, data.text);
+    } else {
+      throw Error("Invalid model.");
+    }
+
     const parsedResponse = parseResponse(rawResponse);
 
     const supabase = createClient();
-    const { error } = await supabase.from("generations").insert({
-      email: user.email,
-      file_name: file.name,
-      response: parsedResponse,
-      action: "GENQV1",
-    });
 
+    const newGeneration: Database["public"]["Tables"]["generations"]["Insert"] =
+      {
+        email: user.email,
+        file_name: file.name,
+        response: parsedResponse as any,
+        action: "GENQV1",
+      };
+
+    await supabase.from("generations").insert(newGeneration);
     return {
       message: "",
       data: parsedResponse,

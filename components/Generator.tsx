@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { SubmitForm } from "../app/actions";
+import { SubmitForm, getModels } from "../app/actions";
 import { useFormState } from "react-dom";
 import { SubmitButton } from "@/app/login/submit-button";
 import { questionsFromResumeInitialState } from "@/utils/states";
@@ -15,6 +15,7 @@ export default function Generator({
 }) {
   const [file, setFile] = React.useState<File>();
   const [fileEnter, setFileEnter] = React.useState<boolean>(false);
+  const [models, setModels] = React.useState<string[]>([]);
   const router = useRouter();
 
   const [formState, submitFormAction] = useFormState(
@@ -47,6 +48,15 @@ export default function Generator({
       return;
     }
   }, [formState]);
+
+  useEffect(() => {
+    const fetchModels = async () => {
+      const models = await getModels();
+      setModels(models);
+    };
+
+    fetchModels();
+  }, []);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
@@ -131,6 +141,27 @@ export default function Generator({
                   : "Drag & Drop or Select a PDF up to 1MB"}
               </p>
             </div>
+          </div>
+        </div>
+        <div className="col-span-full grid place-items-center space-y-4">
+          <div className="w-full">
+            <label
+              htmlFor="model"
+              className="block mb-2 text-sm font-medium text-foreground/50 w-9/12 md:w-6/12 mx-auto"
+            >
+              Select Model
+            </label>
+            <select
+              id="model"
+              name="model"
+              className="border border-r-8 border-transparent w-9/12 md:w-6/12 mx-auto text-sm bg-background rounded-lg block p-2.5 outline outline-foreground/25 outline-1"
+            >
+              {models.map((model) => (
+                <option key={model} value={model}>
+                  {model}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
         {file?.name ? (

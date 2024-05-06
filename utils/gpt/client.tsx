@@ -2,7 +2,10 @@ import OpenAI from "openai";
 
 const openai = new OpenAI();
 
-export default async function generateQuestionsGPT(resumeText: string) {
+export default async function generateQuestionsGPT(
+  model: string,
+  resumeText: string
+) {
   const chatCompletion = await openai.chat.completions.create({
     messages: [
       {
@@ -14,7 +17,7 @@ export default async function generateQuestionsGPT(resumeText: string) {
         content: `Resume: ${resumeText}`,
       },
     ],
-    model: "gpt-3.5-turbo",
+    model: model,
     temperature: 0.3,
   });
 
