@@ -1,0 +1,12 @@
+resumely.co {
+        redir https://www.resumely.co{uri}
+}
+
+www.resumely.co {
+        reverse_proxy localhost:3000
+        header Host {http.request.host}
+        header X-Real-IP {http.request.remote}
+        header X-Forwarded-Proto {http.request.scheme}
+        header X-Forwarded-Host {http.request.host}
+        header X-Forwarded-Port {http.request.port}
+}
