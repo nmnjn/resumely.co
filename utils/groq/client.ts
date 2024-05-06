@@ -22,9 +22,9 @@ export default async function generateQuestions(resumeText: string) {
     top_p: 1,
     stream: false,
     stop: null,
-    response_format: {
-      type: "json_object",
-    },
+    // response_format: {
+    //   type: "json_object",
+    // },
   });
 
   return chatCompletion.choices[0].message.content;
