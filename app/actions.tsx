@@ -7,6 +7,7 @@ import pdfParse from "pdf-parse";
 import { GeneratorResponse } from "@/utils/interface";
 
 import generateQuestions from "@/utils/groq/client";
+import generateQuestionsGPT from "@/utils/gpt/client";
 
 export async function getUser(redirectToLogin: boolean) {
   const supabase = createClient();
@@ -78,7 +79,7 @@ export async function SubmitForm(prevState: any, formData: FormData) {
     const buffer = Buffer.from(arrayBuffer);
     const data = await pdfParse(buffer);
 
-    const rawResponse = await generateQuestions(data.text);
+    const rawResponse = await generateQuestionsGPT(data.text);
     const parsedResponse = parseResponse(rawResponse);
 
     const supabase = createClient();
