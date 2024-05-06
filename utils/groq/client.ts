@@ -16,9 +16,9 @@ export default async function generateQuestions(resumeText: string) {
         content: `Resume: ${resumeText}`,
       },
     ],
-    model: "llama3-8b-8192", //"llama3-70b-8192", //"mixtral-8x7b-32768", //"llama3-8b-8192",
-    temperature: 0.3,
-    max_tokens: 3500,
+    model: "llama3-8b-8192", //"llama3-70b-8192", //"mixtral-8x7b-32768", //"llama3-8b-8192", //"gemma-7b-it"
+    temperature: 0.5,
+    max_tokens: 5000,
     top_p: 1,
     stream: false,
     stop: null,

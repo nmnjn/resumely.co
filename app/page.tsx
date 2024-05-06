@@ -45,7 +45,7 @@ export default async function ProtectedPage() {
             nmnjn
           </a>
           <br /> */}
-          Powered by llama3-70b-8192 with{" "}
+          Powered by llama3-8b-8192 with{" "}
           <a
             href="https://groq.com/"
             target="_blank"
