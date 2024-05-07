@@ -16,6 +16,7 @@ export type Database = {
           email: string | null
           file_name: string | null
           id: number
+          model: string | null
           response: Json | null
           user_id: string | null
         }
@@ -25,6 +26,7 @@ export type Database = {
           email?: string | null
           file_name?: string | null
           id?: number
+          model?: string | null
           response?: Json | null
           user_id?: string | null
         }
@@ -34,6 +36,7 @@ export type Database = {
           email?: string | null
           file_name?: string | null
           id?: number
+          model?: string | null
           response?: Json | null
           user_id?: string | null
         }

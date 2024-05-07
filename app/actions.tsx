@@ -125,6 +125,7 @@ export async function SubmitForm(prevState: any, formData: FormData) {
         file_name: file.name,
         response: parsedResponse as any,
         action: "GENQV1",
+        model: model,
       };
 
     await supabase.from("generations").insert(newGeneration);
