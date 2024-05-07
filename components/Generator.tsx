@@ -154,7 +154,7 @@ export default function Generator({
             <select
               id="model"
               name="model"
-              className="border border-r-8 border-transparent w-9/12 md:w-6/12 mx-auto text-sm bg-background rounded-lg block p-2.5 outline outline-foreground/25 outline-1"
+              className="border border-r-8 border-transparent w-9/12 md:w-6/12 mx-auto text-sm bg-background rounded-lg block p-4 sm:p-2.5 outline outline-foreground/25 outline-1"
             >
               {models.map((model) => (
                 <option key={model} value={model}>
