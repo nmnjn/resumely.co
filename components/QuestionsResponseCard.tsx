@@ -55,7 +55,7 @@ export default function QuestionsResponseCard({
                     side="left"
                     className="space-y-4 overflow-y-scroll"
                   >
-                    <SheetHeader>
+                    <SheetHeader className="text-left">
                       <TypographyP>Question {index + 1}</TypographyP>
                       <TypographyH3>{question.question}</TypographyH3>
                     </SheetHeader>

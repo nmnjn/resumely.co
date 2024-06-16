@@ -82,6 +82,10 @@ export default function DashboardSidebar() {
     return pathname?.startsWith(href);
   }
 
+  if (!isDesktop) {
+    return <></>;
+  }
+
   return (
     <aside className="w-[240px] max-w-sx h-screen fixed left-0 top-0 z-1000 border-r bg-background">
       <div className="w-full h-16 flex justify-start items-center p-3 space-x-2">
