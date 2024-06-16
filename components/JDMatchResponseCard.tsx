@@ -50,9 +50,11 @@ export default function JDMatchResponseCard({
                     <div className="space-y-1">
                       <Badge variant="outline" className="text-sm">
                         ✨{" "}
-                        <div className="text-foreground/80 ml-1">Suggested</div>
+                        <div className="text-foreground/80 ml-1 text-sm">
+                          Suggested
+                        </div>
                       </Badge>
-                      <TypographyH4>{suggestion}</TypographyH4>
+                      <TypographyP>{suggestion}</TypographyP>
                     </div>
                   </Card>
                 </div>
