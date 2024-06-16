@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import { HistoryView } from "../../../components/HistoryView";
 import { TypographyMuted } from "@/components/ui/typography";
 
-export async function Spinner() {
+function Spinner() {
   return (
     <div className="w-full flex h-[calc(100vh-100px)]">
       <div className="m-auto">
@@ -13,7 +13,7 @@ export async function Spinner() {
   );
 }
 
-export async function Message({ text }: { text: string }) {
+function Message({ text }: { text: string }) {
   return (
     <div className="w-full flex h-[calc(100vh-100px)]">
       <div className="m-auto">
