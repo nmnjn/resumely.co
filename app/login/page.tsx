@@ -33,8 +33,8 @@ export default function Login({
 
       <div className="animate-in">
         <div className="text-foreground/50 text-sm text-center">
-          Login is required to prevent the service from abuse!
-          <br />I know it is not ideal!
+          Login is required to prevent the service from misuse!
+          {/* <br />I know it is not ideal! */}
         </div>
         <form>
           <SubmitButton
@@ -84,6 +84,10 @@ export default function Login({
           >
             Continue
           </SubmitButton>
+          <div className="text-foreground/50 text-sm text-center my-4">
+            you will recieve a confirmation email on your first login with email
+            and password
+          </div>
           {/* <SubmitButton
             formAction={signUp}
             className="border border-foreground/20 rounded-md px-4 py-2 text-foreground mb-2"
