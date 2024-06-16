@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { SubmitButton } from "./submit-button";
+import { SubmitButton } from "@/components/SubmitButton";
 import { signIn, signUp, signInWithGoogle } from "./actions";
 import Image from "next/image";
 
@@ -9,10 +9,10 @@ export default function Login({
   searchParams: { message: string };
 }) {
   return (
-    <div className="flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-2">
+    <div className="flex-1 flex flex-col w-full px-8 sm:max-w-md mx-auto justify-center mt-16 gap-6 mb-32">
       <Link
         href="/"
-        className="absolute left-8 top-8 py-2 px-4 rounded-md no-underline text-foreground bg-btn-background hover:bg-btn-background-hover flex items-center group text-sm"
+        className="-ml-2 rounded-md no-underline text-foreground bg-btn-background hover:bg-btn-background-hover flex items-center group text-sm"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -24,7 +24,7 @@ export default function Login({
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
-          className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1"
+          className="h-5 w-5 transition-transform group-hover:-translate-x-0.5"
         >
           <polyline points="15 18 9 12 15 6" />
         </svg>{" "}

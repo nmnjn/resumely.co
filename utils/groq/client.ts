@@ -4,10 +4,7 @@ const groq = new Groq({
   apiKey: process.env.GROQ_API_KEY,
 });
 
-export default async function generateQuestions(
-  model: string,
-  resumeText: string
-) {
+export async function generateQuestionsGROQ(model: string, resumeText: string) {
   const chatCompletion = await groq.chat.completions.create({
     messages: [
       {
@@ -19,16 +16,44 @@ export default async function generateQuestions(
         content: `Resume: ${resumeText}`,
       },
     ],
-    model: model, //"llama3-70b-8192", //"mixtral-8x7b-32768", //"llama3-8b-8192", //"gemma-7b-it"
+    model: model,
     temperature: 0.3,
     max_tokens: 3500,
     top_p: 1,
     stream: false,
     stop: null,
-    // response_format: {
-    //   type: "json_object",
-    // },
   });
 
+  return chatCompletion.choices[0].message.content;
+}
+
+export async function generateJDMatchGROQ(
+  model: string,
+  resumeText: string,
+  jdText: string
+) {
+  const chatCompletion = await groq.chat.completions.create({
+    messages: [
+      {
+        role: "system",
+        content: process.env.GENERATE_JD_MATCH_SYSTEM_PROMPT || "",
+      },
+      {
+        role: "user",
+        content: `
+        Resume: ${resumeText}
+        ----------------------------------
+        ----------------------------------
+        Job Description: ${jdText}
+        `,
+      },
+    ],
+    model: model,
+    temperature: 0.3,
+  });
+
+  if (!chatCompletion.choices[0].message.content) {
+    throw new Error("Unable to generate content.");
+  }
   return chatCompletion.choices[0].message.content;
 }

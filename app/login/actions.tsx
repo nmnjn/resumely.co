@@ -17,7 +17,7 @@ export async function signIn(formData: FormData) {
     return redirect(`/login?message=${error.message}`);
   }
 
-  return redirect("/");
+  return redirect("/dashboard");
 }
 
 export async function signUp(formData: FormData) {
@@ -45,7 +45,7 @@ export async function signUp(formData: FormData) {
       return redirect(`/login?message=${error.message}`);
     }
 
-    return redirect("/");
+    return redirect("/dashboard");
   }
 
   if (error) {

@@ -1,15 +1,15 @@
 "use server";
 
 import { createClient } from "@/utils/supabase/server";
-import { redirect } from "next/navigation";
-import pdfParse from "pdf-parse";
-
-import { GeneratorResponse } from "@/utils/interface";
-
-import generateQuestions from "@/utils/groq/client";
-import generateQuestionsGPT from "@/utils/gpt/client";
-import { GPT_MODELS, GROQ_MODELS } from "@/utils/configs";
+import { getUser } from "@/utils/supabase/utils";
 import { Database } from "@/types/supabase";
+import { QuestionsResponse } from "@/utils/interface";
+import { fileCheck, parseResponse } from "@/lib/utils";
+import { generateQuestionsGROQ } from "@/utils/groq/client";
+import { generateQuestionsGPT } from "@/utils/gpt/client";
+import { GPT_MODELS, GROQ_MODELS } from "@/utils/configs";
+import { isRedirectError } from "next/dist/client/components/redirect";
+import { readPDFFileV3 } from "@/lib/server-utils";
 
 export async function getModels() {
   const supabase = createClient();
@@ -33,54 +33,11 @@ export async function getModels() {
   return models;
 }
 
-export async function getUser(redirectToLogin: boolean) {
-  const supabase = createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user && redirectToLogin) {
-    return redirect("/login");
-  }
-
-  return user;
-}
-
-function parseResponse(response: string) {
-  const startIndex = response.indexOf("{");
-  const lastIndex = response.lastIndexOf("}");
-
-  if (startIndex === -1 || lastIndex === -1 || lastIndex < startIndex) {
-    throw new Error(
-      "I am unable to read the document. Please try again later!"
-    );
-  }
-  const jsonString = response.substring(startIndex, lastIndex + 1);
-  try {
-    const jsonObject: GeneratorResponse = JSON.parse(jsonString);
-    if (jsonObject.error && jsonObject.error == "ERROR 1") {
-      throw new Error(
-        "Seems like the document uploaded is not a valid resume. Please try again with a valid resume."
-      );
-    }
-    return jsonObject;
-  } catch (error) {
-    console.error(error);
-    throw new Error(
-      "I am unable to read the document. Please try again later!"
-    );
-  }
-}
-
 export async function SubmitForm(prevState: any, formData: FormData) {
   "use server";
+
   try {
     const user = await getUser(true);
-
-    if (!user) {
-      return redirect("/login");
-    }
 
     const file = formData.get("resume") as File;
     if (file === null) {
@@ -89,43 +46,44 @@ export async function SubmitForm(prevState: any, formData: FormData) {
       };
     }
 
-    const model = (formData.get("model") as string) || "llama3-8b-8192";
+    fileCheck(file);
+    const fileContent = await readPDFFileV3(file);
 
-    if (file.type != "application/pdf") {
-      throw Error(
-        "Uploaded file is not a valid PDF. Please upload a PDF file only."
-      );
-    }
-
-    if (file.size > 500000) {
-      throw Error("Uploaded file is larger than supported tokens");
-    }
-
-    const arrayBuffer = await file.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
-    const data = await pdfParse(buffer);
+    var model = (formData.get("model") as string) || "gpt-4o";
 
     var rawResponse = "";
 
     if (GROQ_MODELS.includes(model)) {
-      rawResponse = await generateQuestions(model, data.text);
+      rawResponse = await generateQuestionsGROQ(model, fileContent);
     } else if (GPT_MODELS.includes(model)) {
-      rawResponse = await generateQuestionsGPT(model, data.text);
+      rawResponse = await generateQuestionsGPT(model, fileContent);
     } else {
-      throw Error("Invalid model.");
+      throw Error(
+        "Invalid model selected. Please choose a supported LLM model"
+      );
     }
 
-    const parsedResponse = parseResponse(rawResponse);
+    const parsedResponse = parseResponse<QuestionsResponse>(rawResponse);
+    if (parsedResponse.error && parsedResponse.error == "ERROR 1") {
+      throw new Error(
+        "Seems like the document uploaded is not a valid resume. Please try again with a valid resume."
+      );
+    }
 
     const supabase = createClient();
 
+    // const { data: storageData, error } = await supabase.storage
+    //   .from("resumely")
+    //   .upload(`${user!.id}/${Date.now()}-${file.name}`, file);
+
     const newGeneration: Database["public"]["Tables"]["generations"]["Insert"] =
       {
-        email: user.email,
+        email: user!.email,
         file_name: file.name,
         response: parsedResponse as any,
         action: "GENQV1",
         model: model,
+        // file_path: storageData?.path,
       };
 
     await supabase.from("generations").insert(newGeneration);
@@ -134,6 +92,10 @@ export async function SubmitForm(prevState: any, formData: FormData) {
       data: parsedResponse,
     };
   } catch (error: any) {
+    console.log(error);
+    if (isRedirectError(error)) {
+      throw error;
+    }
     return {
       message: `${error.message}`,
     };

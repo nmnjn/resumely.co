@@ -30,5 +30,26 @@ export const questionsFromResumeInitialState = {
       //   ],
       // },
     ],
+    metadata: {
+      name: "",
+      current_role: "",
+      current_company: "",
+      skills: [],
+    },
+  },
+};
+
+export const jdMatchGeneratorInitialState = {
+  message: "",
+  data: {
+    error: "",
+    rating: null,
+    feedback: ["feedback 1", "feedback 2"],
+    suggestions: [],
+    metadata: {
+      name: "",
+      job_description_role: "",
+      job_description_company: "",
+    },
   },
 };
