@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LucideIcon, Menu } from "lucide-react";
+import { GemIcon, LucideIcon, Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Archive, Inbox, Search, Settings } from "lucide-react";
 
@@ -85,8 +85,11 @@ export default function DashboardSidebar() {
   return (
     <aside className="w-[240px] max-w-sx h-screen fixed left-0 top-0 z-1000 border-r bg-background">
       <div className="w-full h-16 flex justify-start items-center p-3 space-x-2">
-        <div className="text-md text-center align-center rounded-md font-medium mb px-2 py-1">
-          Resumely
+        <div className="text-md text-center align-center rounded-md font-medium mb px-2 py-1 text-foreground/80">
+          <div className="flex items-center gap-x-2">
+            <GemIcon />
+            Resumely
+          </div>
         </div>
       </div>
       <div className="animate-in h-full px-4">

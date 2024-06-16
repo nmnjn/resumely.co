@@ -14,7 +14,7 @@ export default function DashboardLayout({
     <>
       <DashboardSidebar></DashboardSidebar>
       <div className="sm:ml-[240px] max-h-screen">
-        <NavBar />
+        <NavBar showName={false} />
         {children}
       </div>
     </>

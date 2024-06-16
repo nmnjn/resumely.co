@@ -13,7 +13,7 @@ export default async function ProtectedPage() {
 
   return (
     <div>
-      <NavBar />
+      <NavBar showName={true} />
       <div className="animate-in flex flex-col mt-8">
         <Header />
         <QuestionsGenerator />
